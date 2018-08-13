@@ -1,0 +1,11 @@
+{
+  "env": {
+    "development": {
+      "presets": ["env", "react"],
+      "plugins": ["transform-es2015-modules-commonjs", "transform-runtime", "transform-object-rest-spread"]
+    },
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}
