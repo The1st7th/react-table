@@ -2,7 +2,7 @@
   "env": {
     "development": {
       "presets": ["env", "react"],
-      "plugins": ["transform-es2015-modules-commonjs", "transform-runtime", "transform-object-rest-spread"]
+      "plugins": ["transform-es2015-modules-commonjs", "transform-runtime", "transform-object-rest-spread", ["inline-json", {"matchPattern": "config"}]]
     },
     "test": {
       "plugins": ["transform-es2015-modules-commonjs"]

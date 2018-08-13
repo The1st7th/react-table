@@ -10,8 +10,15 @@ import "react-table/react-table.css";
 // pull in the HOC
 import treeTableHOC from "react-table/lib/hoc/treeTable";
 
-import testData from "./test_data";
+import testData from "./test_data2";
 
+let reformattedData = testData.map((obj) => {
+  return { ...obj.body.attendee,
+    error: obj.error,
+    created_at: obj.created_at,
+    function: obj.body.function
+  }
+})
 // wrap ReacTable in it
 // the HOC provides the configuration for the TreeTable
 const TreeTable = treeTableHOC(ReactTable);
@@ -29,11 +36,13 @@ class App extends React.Component {
     super();
     this.state = {
       // data: makeData()
-      data: testData
+      data: reformattedData
     };
   }
   render() {
     const { data } = this.state;
+    // console.log(data);
+
     // now use the new TreeTable component
     return (
       <div>
@@ -48,44 +57,29 @@ class App extends React.Component {
               : true;
           }}
           data={data}
-          pivotBy={["state", "post", "city"]}
+          pivotBy={["company_id", "profile_uid"]}
           columns={[
             // we only require the accessor so TreeTable
             // can handle the pivot automatically
             {
-              accessor: "state"
+              accessor: "company_id"
             },
             {
-              accessor: "post"
-            },
-            {
-              accessor: "city"
+              accessor: "profile_uid"
             },
 
             // any other columns we want to display
             {
-              Header: "First Name",
-              accessor: "first_name"
+              Header: "Created At",
+              accessor: "created_at"
             },
             {
-              Header: "Last Name",
-              accessor: "last_name"
+              Header: "Function",
+              accessor: "function"
             },
             {
-              Header: "Company Name",
-              accessor: "company_name"
-            },
-            {
-              Header: "Address",
-              accessor: "address"
-            },
-            {
-              Header: "Phone 1",
-              accessor: "phone1"
-            },
-            {
-              Header: "Email",
-              accessor: "email"
+              Header: "Error",
+              accessor: "error"
             }
           ]}
           defaultPageSize={10}
