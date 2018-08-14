@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "react-dom";
 import { makeData, Logo, Tips } from "./Utils";
 import _ from "lodash";
-
+import { FormGroup, FormControl } from 'react-bootstrap';
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -40,28 +40,37 @@ class App extends React.Component {
       data: reformattedData
     };
     this.dataload = this.dataLoad.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    var _url = "";
   }
 
-  componentDidMount() {
-    //a second option for making the call via .fetch method
-
-    // fetch('https://files.prolaera.com/errors/kinesis/msGraphStream-prod/msGraphStream-prod_08_13_2018.json')
-    //   .then(function(response) {
-    //     return response.json();
-    //   })
-    //   .then(function(myJson) {
-    //     console.log(myJson);
-    //   });
-    console.log("component did mount")
-    this.dataload().then(data => {
+//   componentDidMount() {
+//     //a second option for making the call via .fetch method
+//
+//     // fetch('https://files.prolaera.com/errors/kinesis/msGraphStream-prod/msGraphStream-prod_08_13_2018.json')
+//     //   .then(function(response) {
+//     //     return response.json();
+//     //   })
+//     //   .then(function(myJson) {
+//     //     console.log(myJson);
+//     //   });
+//
+//   //   console.log("component did mount")
+//   //   this.dataload().then(data => {
+//   //     this.setState({data});
+//   //   });
+//   // }
+// }
+  onSubmit(e) {
+    e.preventDefault();
+    this.dataload(this._url).then(data => {
       this.setState({data});
-    });
+    })
   }
-
-  dataLoad() {
+  dataLoad(url) {
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
-      let url = "https://files.prolaera.com/errors/kinesis/msGraphStream-prod/msGraphStream-prod_08_13_2018.json";
+      // let url = "https://files.prolaera.com/errors/kinesis/msGraphStream-prod/msGraphStream-prod_08_13_2018.json";
       xhr.open("GET", url, true);
       xhr.responseType = "json";
       xhr.onload = function() {
@@ -88,6 +97,12 @@ class App extends React.Component {
     // now use the new TreeTable component
     return (
       <div>
+        <form className="container" id="reset">
+          <FormGroup>
+            <FormControl className="form-control" type="text" id="url" placeholder="Enter URL" onChange={(e) => {this._url = e.target.value}} />
+          </FormGroup>
+          <button className="btn btn-outline-info" onClick = {(e) => this.onSubmit(e)}>Submit</button>
+        </form>
         <TreeTable
           filterable
           defaultFilterMethod={(filter, row, column) => {
