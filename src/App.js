@@ -12,7 +12,7 @@ import treeTableHOC from "react-table/lib/hoc/treeTable";
 
 import testData from "./test_data2";
 
-let reformattedData = testData.map((obj) => {
+const reformattedData = testData.map((obj) => {
   return { ...obj.body.attendee,
     error: obj.error,
     created_at: obj.created_at,
