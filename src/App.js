@@ -12,13 +12,14 @@ import treeTableHOC from "react-table/lib/hoc/treeTable";
 
 import testData from "./test_data2";
 
-const reformattedData = testData.map((obj) => {
-  return { ...obj.body.attendee,
-    error: obj.error,
-    created_at: obj.created_at,
-    function: obj.body.function
-  }
-})
+
+const reformattedData = testData.map(obj => {
+    return { ...obj.body.attendee,
+      error: obj.error,
+      created_at: obj.created_at,
+      function: obj.body.function
+    }
+  })
 // wrap ReacTable in it
 // the HOC provides the configuration for the TreeTable
 const TreeTable = treeTableHOC(ReactTable);
@@ -38,10 +39,51 @@ class App extends React.Component {
       // data: makeData()
       data: reformattedData
     };
+    this.dataload = this.dataLoad.bind(this);
+  }
+
+  componentDidMount() {
+    //a second option for making the call via .fetch method
+
+    // fetch('https://files.prolaera.com/errors/kinesis/msGraphStream-prod/msGraphStream-prod_08_13_2018.json')
+    //   .then(function(response) {
+    //     return response.json();
+    //   })
+    //   .then(function(myJson) {
+    //     console.log(myJson);
+    //   });
+    console.log("component did mount")
+    this.dataload().then(data => {
+      this.setState({data});
+    });
+  }
+
+  dataLoad() {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+      let url = "https://files.prolaera.com/errors/kinesis/msGraphStream-prod/msGraphStream-prod_08_13_2018.json";
+      xhr.open("GET", url, true);
+      xhr.responseType = "json";
+      xhr.onload = function() {
+        if(xhr.status === 200) {
+          var newData = xhr.response;
+          var reformattedData = newData.map(obj => {
+              return { ...obj.body.attendee,
+                error: obj.error,
+                created_at: obj.created_at,
+                function: obj.body.function
+              }
+            })
+            resolve(reformattedData);
+        } else {
+          reject(Error(xhr.statusText));
+        }
+      }
+      xhr.send();
+    })
   }
   render() {
     const { data } = this.state;
-    // console.log(data);
 
     // now use the new TreeTable component
     return (
